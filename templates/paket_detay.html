@@ -1,0 +1,79 @@
+{% include 'layouts/header.html' %}
+    <section id="intros" class="clearfix xrb des3">
+
+        <div class="dikort">
+            <div class="alans1 fadeInUp">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-12 ortala" style="color: #fff;display: inline-grid;">
+                            <div class="dikort modikort">
+
+                                <div class="paketbaslik">
+                                    <i class="{{category.icon}}"></i>
+                                    <h1><b>{{platform.name}} {{category.name}}</b></h1>
+                                    <p>{{category.desc}}</p>
+                                </div>
+
+
+                            </div>
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
+
+
+
+        </div>
+
+        <div class="oval-head"></div>
+    </section><!-- #intro -->
+    <div class="hizser">
+    </div>
+
+    <main id="main">
+        <section id="paklist" class="mb50 mobmb20">
+            <form id="full-form" method="POST">
+                {% csrf_token %}
+                <div class="container">
+                    <div class="paketliste row">
+                        {% for pak in paket %}
+                        <div class="col-md-3">
+                            <div class="paket wow fadeInUp keskin">
+                                <div class="paket-icon xrc"><i class="{{pak.icon}}"></i></div>
+                                <div class="paket-baslik"><b class="xrc">{{pak.name}}</b><br>
+                                    <span>{{pak.quantity}}</span>
+                                </div>
+                                <div class="paketozellik mozellik">
+                                    <ul>
+                                        <li><i class="fas fa-chevron-right xrc"></i> {{pak.text1}}</li>
+                                        <li><i class="fas fa-chevron-right xrc"></i> {{pak.text2}}</li>
+                                        <li><i class="fas fa-chevron-right xrc"></i> {{pak.text3}}</li>
+                                        <li><i class="fas fa-chevron-right xrc"></i> {{pak.text4}}</li>
+                                    </ul>
+                                </div>
+                                <div class="paketfiyat xrc keskin">{{pak.price}} TL</div>
+                                <a href="{% url 'siparis' pak.id %}" class="btn paketsatinal xrb keskin">SATIN AL</a>
+                            </div>
+                        </div>
+                        {% endfor %}
+
+                        <div class="col-md-12" style="margin-top: 50px;">
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </section>
+
+
+        <style type="text/css">
+            @media(max-width: 700px) {
+                .mozellik {
+                    overflow: unset;
+                    height: auto !important;
+                }
+            }
+        </style>
+    </main>
+    {% include 'layouts/footer.html' %}

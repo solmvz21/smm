@@ -1,0 +1,51 @@
+{% include 'layouts/header.html' %}
+  <section id="intros" class="clearfix xrb des3">
+    <div class="dikort">
+      <div class="alans1 fadeInUp">
+        <div class="container">
+          <div class="row">
+            <div class="col-md-12 ortala" style="color: #fff;display: inline-grid;">
+              <div class="dikort modikort">
+                <div class="hizmetbaslik">
+                  <i class="{{platform.icon}}"></i>
+                  <h1><b>{{platform.name}} Hizmetleri</b></h1>
+                  <p>Son dönemin en popüler mecrasında sizde varolan yerinizi güçlendirin yada Youtube hizmetlerimizle
+                    bomba gibi bir giriş yapın</p>
+                </div>
+                <div class="float">
+                  <i class="fas fa-chevron-down" style="font-size: 30px;animation: float 1s ease infinite"></i>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="oval-head"></div>
+  </section>
+  <main id="main">
+    <section id="hizlist" class="mb50 mobmb20">
+      <div class="container">
+        <div class="hizmetliste row">
+        {% for catego in category %}
+          <div class="col-md-4">
+            <div class="hizmet paket wow fadeInUp keskin">
+              <div class="hizmet-icon xrc"><i class="{{catego.icon}}"></i></div>
+              <div class="hizmet-baslik"><b class="xrc">{{catego.name}}</b></div>
+              <p>{{catego.desc}}</p>
+              <a href="{% url 'paket_detay' catego.slug %}" class="btn hizmetsatinal xrb keskin">İncele</a>
+            </div>
+          </div>
+          {% endfor %}
+          
+          
+        </div>
+      </div>
+    </section>
+  </main>
+  <style type="text/css">
+    .hizmet.paket.wow.fadeInUp.keskin {
+      width: -webkit-fill-available !important;
+    }
+  </style>
+  {% include 'layouts/footer.html' %}

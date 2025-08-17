@@ -1,0 +1,57 @@
+{% include 'layouts/header.html' %}
+  <section id="introx" class="clearfix xrb des3">
+  <div class="dikort">
+    <div class="alans1 fadeInUp">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-12 ortala" style="color: #fff;display: inline-grid;">
+            <div class="dikort modikort">
+              <div class="sipbaslik">
+                <i class="fas fa-envelope"></i>
+                <h1><b>İletişim</b></h1>
+                <p>Lütfen bizimle iletişime geçmek için aşağıdaki formu doldurunuz. </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="oval-head"></div>
+</section>
+
+    <main id="main">
+      <div class="col-md-8 offset-md-2">
+        <form id="msform" method="POST" style="min-height: 500px;max-width: 800px;margin: 0 auto;margin-top: 50px;margin-bottom: 70px;">
+          {% csrf_token %}
+            <fieldset class="keskin">
+                <div class="row iform">
+                  <div class="col-md-12">
+                    <label><b>Adınız Soyadınız</b></label>
+                    <input type="text" class="keskin" required="" name="i_ad_soyad"  placeholder="Adınız Soyadınız"/>
+                  </div>
+                  <div class="col-md-6">
+                    <label><b>E-Posta</b></label>
+                    <input type="text" class="keskin" required="" name="i_mail"  placeholder="E-Posta Adresiniz"/>
+                  </div>
+                  <div class="col-md-6">
+                    <label><b>Telefon</b></label>
+                    <input type="text" class="keskin" name="i_telefon"  placeholder="Telefon Numaranız"/>
+                  </div>
+                  <div class="col-md-12">
+                    <label><b>Konu</b></label>
+                    <input type="text" class="keskin" required="" name="i_konu"  placeholder="İletişim Sebebi"/>
+                  </div>
+                  <div class="col-md-12">
+                    <label><b>Mesajınız</b></label>
+                    <textarea class="keskin" required="" name="i_mesaj" placeholder="Lütfen mesajınızı yazınız"></textarea>
+                  </div>
+                </div>
+                <input type="hidden" name="key" value="289526309690624278">
+                                <button type="submit" name="olay" class="action-button keskin" value="Gönder">GÖNDER</button>
+                      
+            </fieldset>
+          </form>
+        </div>
+      </main>
+      {% include 'layouts/footer.html' %}

@@ -1,0 +1,243 @@
+{% load static %}
+{% include 'layouts/header.html' %}
+<section id="intro" class="clearfix xrb des3">
+  <div class="dikort">
+    <div class="alan1 fadeInUp">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-6 ortala" style="color: #fff;display: inline-grid;">
+            <div class="dikort modikort">
+              <h1><b>Türkiye‘nin En Kaliteli</b><br>Sosyal Medya Platformu</h1>
+              <div class="mogiz">
+                <p>Tamamen Otomatik Sistem ile Siparişleriniz 7 Gün 24 Saat Hızlı ve Sorunsuz Bir Şekilde
+                  Tamamlanmaktadır.</p>
+                <div class="row">
+                  <div class="col-md-4">
+                    <div class="alan1madde xrc keskin" style="animation-delay: .5s;">
+                      <i class="fas fa-award fa-lg"></i> Kaliteli Hizmet
+                    </div>
+                  </div>
+                  <div class="col-md-4">
+                    <div class="alan1madde xrc keskin" style="animation-delay: .4s;">
+                      <i class="fas fa-check-double"></i> Güvenli Ödeme
+                    </div>
+                  </div>
+                  <div class="col-md-4">
+                    <div class="alan1madde xrc keskin" style="animation-delay: .1s;">
+                      <i class="far fa-grin"></i> Mutlu Müşteriler
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="col-md-6 ortala">
+            <div class="head-servis row">
+              {% for row in platform %}
+              <a href="{% url 'hizmet_detay' row.slug %}" class="hser xrc keskin">
+                <i class="{{ row.icon }}"></i>
+                <span><b>{{ row.name }}</b><br>Hizmetleri</span>
+              </a>
+              {% endfor %}
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="dikort">
+    <div class="alan2 fadeInUp">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-12 ortala">
+            <h2 style="color: #fff;"><b>Hızlı Sipariş</b></h2>
+            <p style="color: #fff;">Hızlı sipariş sistemi ile ihtiyacınız olan pakete hızlıca erişin.</p>
+
+
+            <div class="hizlisip keskin">
+              <form method="POST" action="">
+                {% csrf_token %}
+                <div class="form-row" id="hizli-al">
+                  <div class="form-group col-md-4">
+                    <select class="form-control" onchange="HizliSatinAl('platform')" id="platform">
+                      <option disabled="" selected="">Platform Seçin</option>
+                      {% for p in platform %}
+                      <option value="{{ p.id }}">{{ p.name }}</option>
+                      {% endfor %}
+                    </select>
+                    <div class="validation"></div>
+                  </div>
+                  <div class="form-group col-md-4">
+                    <select class="form-control" onchange="HizliSatinAl('kategori')" id="kategori">
+                      <option value="0-0">Kategori Seçin</option>
+                    </select>
+                    <div class="validation"></div>
+                  </div>
+                  <div class="form-group col-md-4">
+                    <select class="form-control" onchange="HizliSatinAl('paket')" id="paket" required="">
+                      <option value="0-0-0">Paket Seçin</option>
+                    </select>
+                    <div class="validation"></div>
+                  </div>
+                  <div class="col-md-12">
+                    <button type="button" id="satinAlBtn" class="btn hiz-but xrb keskin">SATIN AL</button>
+                  </div>
+                </div>
+              </form>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="oval-head"></div>
+</section><!-- #intro -->
+<div class="hizser-oval">
+  <a href="#intro"><button id="ackapa" class="alandugme xrc keskin" onclick="hizligetir('start')"><i
+        class="fas fa-bolt"></i> Hızlı Siparişe Geç</button></a>
+</div>
+
+
+<main id="main">
+  <section id="coksatan" class="mb50 mobmb20">
+    <div class="container">
+
+      <header class="section-header" style="margin-bottom: -10px; ">
+        <h3 class="xrc">Çok Satanlar</h3>
+        <p>Müşterilerimizin en çok tercih ettiği paketler</p>
+      </header>
+      <form method="POST">
+        <div class="row">
+          <div class="owl-carousel owl-theme mustu">
+            {% for paket in paketler %}
+            <div class="item">
+              <div class="paket wow fadeInUp keskin" data-wow-delay="0.1s">
+                <div class="paket-icon xrc"><i class="{{paket.icon}}"></i></div>
+                <div class="paket-baslik"><b class="xrc">{{paket.name}}</b><br>
+                  <span>{{paket.quantity}}</span>
+                </div>
+                <div class="paketozellik">
+                  <ul>
+                    <li><i class="fas fa-chevron-right xrc"></i> {{paket.text1}}</li>
+                    <li><i class="fas fa-chevron-right xrc"></i> {{paket.text2}}</li>
+                    <li><i class="fas fa-chevron-right xrc"></i> {{paket.text3}}</li>
+                    <li><i class="fas fa-chevron-right xrc"></i> {{paket.text4}}</li>
+                  </ul>
+                </div>
+                <div class="paketfiyat xrc keskin">{{paket.price}}</div>
+                <a href="{% url 'siparis' paket.id %}" class="btn paketsatinal xrb keskin">SATIN AL</a>
+              </div>
+            </div>
+            {% endfor %}
+
+          </div>
+        </div>
+      </form>
+
+    </div>
+  </section>
+
+
+  <section id="services" class="xrb des3">
+    <div class="oval-ust"></div>
+    <div class="ptb">
+      <div class="container">
+        <header class="section-header">
+          <h3 style="color: #fff;">Neden Bizi Tercih Etmelisiniz?</h3>
+          <p style="color: #fff;">Yılların getirmiş olduğu tecrübe ile hizmet sağlıyoruz.</p>
+        </header>
+
+        <div class="row">
+          <div class="col-md-6 col-lg-5 offset-lg-1 wow bounceInUp" data-wow-duration="1.4s">
+            <div class="box keskin">
+              <div class="icon"><i class="fa-lg fas fa-award xrc"></i></div>
+              <h4 class="title">Kaliteli Hizmet</h4>
+              <p class="description">Paketlerimizdeki tüm gönderimleri 100% gerçek ve aktif kullanıcılar ile
+                gerçekleştiriyoruz.</p>
+            </div>
+          </div>
+          <div class="col-md-6 col-lg-5  wow bounceInUp" data-wow-duration="1.4s">
+            <div class="box keskin">
+              <div class="icon"><i class="fas fa-check-double xrc"></i></div>
+              <h4 class="title">Hızlı Teslimat</h4>
+              <p class="description">Sipariş etmiş olduğunuz hizmetleri paket açıklamalarında belirtilen süre içinde
+                teslim ediyoruz</p>
+            </div>
+          </div>
+          <div class="col-md-6 col-lg-5 offset-lg-1 wow bounceInUp" data-wow-duration="1.4s">
+            <div class="box keskin">
+              <div class="icon"><i class="fas fa-shield-alt xrc"></i></div>
+              <h4 class="title">Güvenli Ödeme</h4>
+              <p class="description">Sitemiz üzerinde yapacağınız tüm ödemelerin güvenliğini 3D güvenli ödeme sistemi
+                ile sağlıyoruz</p>
+            </div>
+          </div>
+          <div class="col-md-6 col-lg-5  wow bounceInUp" data-wow-duration="1.4s">
+            <div class="box keskin">
+              <div class="icon"><i class="fas fa-headset xrc"></i></div>
+              <h4 class="title">Sınırsız Destek</h4>
+              <p class="description">Sipariş öncesi veya sonrası tüm soru ve sorunlarınızı 7/24 canlı destek üzerinden
+                cevaplıyoruz.</p>
+            </div>
+          </div>
+        </div>
+
+        <section id="testimonials" class="keskin">
+          <div class="container">
+            <div class="row justify-content-center" style="text-align: center;">
+              <div class="col-lg-8">
+
+                <div class="owl-carousel yorumalan wow fadeInUp">
+                  <div class="testimonial-item">
+                    <h2>İlayda Pekgöz</h2>
+                    <h4>İnfluencer</h4>
+                    <p>"Bugün bu seviyelere gelmemde katkınız çok fazla, güvenmezdim böyle sitelere ancak iyi ki
+                      bulmuşum sizi."</p>
+                  </div>
+                  <div class="testimonial-item">
+                    <h2>Esila Ağırman</h2>
+                    <h4>Kozmetik</h4>
+                    <p>"İşinin hakkını veren tek firma. Çok teşekkürler."</p>
+                  </div>
+                  <div class="testimonial-item">
+                    <h2>Murat Bşaduman</h2>
+                    <h4>Öğrenci</h4>
+                    <p>"sayfam için paket satın aldım. Çok memnun kaldım. Sonsuz teşekkürlerimi sunuyorum"</p>
+                  </div>
+                  <div class="testimonial-item">
+                    <h2>Mehmet Aydın</h2>
+                    <h4>Emlakçı</h4>
+                    <p>"Sağolun İlyas Bey. Desteğiniz için çok teşekkür ediyorum. Sizlerle devam etmek isteriz."</p>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+
+
+          </div>
+        </section>
+
+      </div>
+    </div>
+    <div class="oval-alt"></div>
+  </section><!-- #services -->
+
+  <section id="blogyazi">
+    <div class="container">
+      <header class="section-header">
+        <h3 class="xrc">Blog Yazıları?</h3>
+        <p style="padding-bottom: 10px">Blog sayfamızdan son içerikler</p>
+      </header>
+      <div class="anablogyazi row">
+        <div class="owl-carousel owl-theme mustu">
+        </div>
+
+      </div>
+  </section>
+
+</main>
+{% include 'layouts/footer.html' %}

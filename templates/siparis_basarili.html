@@ -1,0 +1,38 @@
+{% include 'layouts/header.html' %}
+<div class="container" style="padding: 80px 0;">
+    <div class="card shadow p-4">
+        <h2 class="text-success text-center">🎉 Siparişiniz Alındı!</h2>
+        <p class="text-center">Aşağıda sipariş özetiniz yer almaktadır.</p>
+        <hr>
+        <div class="text-center mt-3">
+            <h5>Ödeme için Bilgiler:</h5>
+            <p style="font-size: 1rem; font-weight: bold; margin-bottom: 0;">İsim Soyisim: <span
+                    style="font-weight: normal;">{{ payment_info.full_name }}</span></p>
+            <p style="font-size: 1rem; font-weight: bold; margin-bottom: 0;">Banka: <span
+                    style="font-weight: normal;">{{ payment_info.bank_name }}</span></p>
+            <p style="font-size: 1rem; font-weight: bold; margin-bottom: 0;">IBAN: <span
+                    style="font-weight: normal;">{{ payment_info.iban }}</span></p>
+            <small>Lütfen ödemeyi bu bilgilere göre yapınız.</small>
+        </div>
+        <ul class="list-group">
+            <li class="list-group-item"><strong>Ad Soyad:</strong> {{ order.full_name }}</li>
+            <li class="list-group-item"><strong>Email:</strong> {{ order.email }}</li>
+            <li class="list-group-item"><strong>Telefon:</strong> {{ order.phone }}</li>
+            <li class="list-group-item"><strong>Profil Linki:</strong> <a href="{{ order.profile_link }}"
+                    target="_blank">{{ order.profile_link }}</a></li>
+            <li class="list-group-item"><strong>Paket:</strong> {{ order.package.name }} - {{order.package.quantity }}
+            </li>
+            <li class="list-group-item"><strong>Fiyat:</strong> {{ order.total_price }} TL</li>
+            <li class="list-group-item"><strong>Ödeme Türü:</strong> {{ order.payment_method }}</li>
+            <li class="list-group-item"><strong>Tarih:</strong> {{ order.created_at|date:"d.m.Y H:i" }}</li>
+        </ul>
+        <div class="text-center mt-4">
+            <form method="post" action="{% url 'send_payment_notification' order.id %}">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-success">💸 Ödeme Bildirimi Gönder</button>
+            </form>
+        </div>
+        <hr>
+    </div>
+</div>
+{% include 'layouts/footer.html' %}

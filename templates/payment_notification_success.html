@@ -1,0 +1,14 @@
+{% include 'layouts/header.html' %}
+<div class="container" style="padding: 80px 0; text-align: center;">
+    <div class="card shadow p-4">
+        <h2 class="text-success">💸 Ödeme bildirimi başarıyla gönderildi!</h2>
+        <p>3 saniye içinde anasayfaya yönlendiriliyorsunuz...</p>
+    </div>
+</div>
+
+<script>
+    setTimeout(function() {
+        window.location.href = "{% url 'index' %}";
+    }, 3000);
+</script>
+{% include 'layouts/footer.html' %}

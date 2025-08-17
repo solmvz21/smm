@@ -1,0 +1,349 @@
+{% include 'layouts/header.html' %}
+    <section id="introx" class="clearfix xrb des3">
+        <div class="dikort">
+            <div class="alans1 fadeInUp">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-12 ortala" style="color: #fff;display: inline-grid;">
+                            <div class="dikort modikort">
+                                <div class="sipbaslik">
+                                    <i class="fas fa-users"></i>
+                                    <h1><b>{{package.name}} {{package.quantity}}</b></h1>
+                                    <p>Siparişi tamamlamak için aşağıdaki formu doldurunuz. </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="oval-head"></div>
+    </section>
+    <main id="main" style="padding: 50px 0px">
+        <div class="col-md-8 offset-md-2">
+            <form id="msform" method="post" action="{% url 'siparis' package.id %}">
+                <ul id="progressbar">
+                    <li class="active">İşlem Detayları</li>
+                    <li>Kişisel Bilgiler</li>
+                    <li>Ödeme Aşaması</li>
+                </ul>
+                <fieldset class="keskin">
+                    <h2 class="fs-title">Lütfen Url Linkinizi Giriniz</h2>
+                    <h3 class="fs-subtitle">Lütfen gönderi veya profil bilgilerinizi doğru girdiğinizden emin olun. Ayrıca
+                        gizli profillere gönderim sağlanamamaktadır. Lütfen profiliniz gizlideyse gizliden çıkarın.</h3>
+                    <input type="text" id="islem-adresi" name="sp_musteri_link" class="keskin" required=""
+                        placeholder="Örnek: https://www.instagram.com/p/NHJnkjaaJa/">
+                    <input type="hidden" name="sp_musteri_not" value="">
+                    <div class="alert alert-danger" id="alert-islem-adresi" style="display: none;"></div>
+                    <input type="button" onclick="Kontrol('islem-adresi')" name="next" class="next action-button keskin"
+                        value="Devam Et">
+                </fieldset>
+                <fieldset class="keskin" style="margin-bottom: 50px;">
+                    <h2 class="fs-title">Kişisel İletişim Bilgileri</h2>
+                    <h3 class="fs-subtitle">Sorun yaşanması durumunda sizinle iletişime geçebilmemiz için lütfen
+                        aşağıdakileri doğru şekilde doldurunuz.</h3>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <select class="sipsel keskin" name="sp_tur" id="faturaturu" onchange="FaturaTuru()">
+                                <option value="bireysel">Bireysel</option>
+
+                            </select>
+                        </div>
+                    </div>
+                    <script
+                        type="text/javascript">function FaturaTuru() { alert(); var secim = $('#faturaturu').val(); if (secim == "kurumsal") { $('#kurumsal').show(); return true; } $('#kurumsal').hide(); }</script>
+                    <input type="text" class="keskin" id="adsoyad" name="sp_musteri_adi" placeholder="Adınız Soyadınız">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <input type="text" class="keskin" id="telefon" required="" minlength="11" maxlength="11"
+                                name="sp_musteri_telefon" placeholder="Telefon Numarası">
+                        </div>
+                        <div class="col-md-6">
+                            <input type="text" class="keskin" id="mail" required="" name="sp_musteri_mail"
+                                placeholder="E-Posta">
+                        </div>
+                        <span id="kurumsal" style="display: none;">
+                            <div class="col-md-12">
+                                <input type="text" class="keskin" name="sp_musteri_adres" placeholder="Adres">
+                            </div>
+                            <div class="col-md-6">
+                                <input type="text" class="keskin" name="sp_musteri_vn" placeholder="Vergi Numarası">
+                            </div>
+                            <div class="col-md-6">
+                                <input type="text" class="keskin" name="sp_musteri_vd" placeholder="Vergi Dairesi">
+                            </div>
+                        </span>
+
+                    </div>
+                    <div class="alert alert-danger" id="alert-iletisim-bilgileri" style="display: none;"></div>
+                    <input type="button" name="previous" class="previous action-button-previous keskin"
+                        value="Geri Git">
+                    <input type="button" onclick="Kontrol('iletisim-bilgileri')" name="next"
+                        class="next action-button keskin" value="Devam Et">
+                </fieldset>
+                <fieldset class="keskin" style="margin-bottom: 50px;">
+                    <h2 class="fs-title">Ödeme Aşaması</h2>
+                    <h3 class="fs-subtitle">Lütfen aşağıdakileri doğru şekilde doldurunuz.</h3>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <select name="odeme_turu" class="sipsel keskin">
+                                <option value="havalepay">EFT - Havale</option>
+                                <option value="shopier">Shopier (Online Ödeme)</option>
+                            </select>
+
+                        </div>
+                    </div>
+                    <div id="siparis-ucret">
+                        <input type="text" class="keskin" id="kupon_kodu" name="kupon_kodu"
+                            placeholder="Kupon Kodu (Varsa)"><button type="button" onclick="KuponKodu('37')"
+                            class="btn kupuyg xrb keskin"><i class="fas fa-check mogiz"></i> Uygula</button>
+                        <div class="alert alert-danger" id="alert-kupon-kodu" style="display: none;"></div>
+                        <h2 class="fs-title" style="margin:12px 0px;">İşlem Bilgisi</h2>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="sipfiso keskin">Paket Ücreti: <span>{{ price }}</span></div>
+                                <div class="sipfiso keskin">Hizmet Bedeli: <span>0.00</span></div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="sipfiso keskin">Kupon İndirimi: <span>0.00 TL</span></div>
+                                <div class="sipfiso keskin">Ödenmesi Gereken Tutar: <span>{{ price }} TL</span></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="clear"></div>
+                    <div class="kulsoz" style="text-align: center;width: 100%">
+                        <div class="modal fade" id="kullanicisozlesmesi"
+                            style="background: rgba(0, 0, 0, 0.8); display: none;" tabindex="-1" role="dialog"
+                            aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            <div class="modal-dialog" role="document" style="max-width: 100%">
+                                <div class="container">
+                                    <div class="modal-content keskin">
+                                        <div class="modal-body">
+                                            <div class="container">
+                                                <div class="sorgusss row">
+                                                    <div class="col-md-12" style="text-align: center;">
+                                                        <h2 style="font-weight: bold;">Kullanım Şartları</h2>
+                                                        <p></p>
+                                                        <h2><strong>HİZMET ŞARTLARI VE KULLANICI SÖZLEŞMESİ</strong>
+                                                        </h2>
+
+                                                        <p>Sizler (Kullanıcı olarak anılacaktır) Site’de sunulan tüm
+                                                            hizmetleri kullanırken aşağıdaki şartlara tabi olduğunuzu,
+                                                            Site’deki hizmetten yararlanmakla ve kullanmaya devam
+                                                            etmekle; Bağlı olduğunuz yasalara göre sözleşme imzalama
+                                                            hakkına, yetkisine ve hukuki ehliyetine sahip ve 18 yaşın
+                                                            üzerinde olduğunuzu, bu sözleşmeyi okuduğunuzu, anladığınızı
+                                                            ve sözleşmede yazan şartlarla bağlı olduğunuzu kabul etmiş
+                                                            sayılırsınız.</p>
+
+                                                        <p>İşbu sözleşme taraflara sözleşme konusu Site ile ilgili hak
+                                                            ve yükümlülükler yükler ve taraflar işbu sözleşmeyi kabul
+                                                            ettiklerinde bahsi geçen hak ve yükümlülükleri eksiksiz,
+                                                            doğru, zamanında, işbu sözleşmede talep edilen şartlar
+                                                            dâhilinde yerine getireceklerini beyan ederler.</p>
+
+                                                        <h3><strong>1. SORUMLULUKLAR</strong></h3>
+
+                                                        <blockquote>
+                                                            <p>1.1. Firma, fiyatlar ve sunulan ürün ve hizmetler
+                                                                üzerinde değişiklik yapma hakkını her zaman saklı
+                                                                tutar.<br>
+                                                                1.2. Firma, üyenin sözleşme konusu hizmetlerden, teknik
+                                                                arızalar dışında yararlandırılacağını kabul ve taahhüt
+                                                                eder.<br>
+                                                                1.3. Kullanıcı, Site’nin kullanımında tersine
+                                                                mühendislik yapmayacağını ya da bunların kaynak kodunu
+                                                                bulmak veya elde etmek amacına yönelik herhangi bir
+                                                                başka işlemde bulunmayacağını aksi halde ve 3. Kişiler
+                                                                nezdinde doğacak zararlardan sorumlu olacağını, hakkında
+                                                                hukuki ve cezai işlem yapılacağını peşinen kabul
+                                                                eder.<br>
+                                                                1.4. Kullanıcı, Site içindeki faaliyetlerinde, Site’nin
+                                                                herhangi bir bölümünde veya iletişimlerinde genel ahlaka
+                                                                ve adaba aykırı, kanuna aykırı, 3. kişilerin haklarını
+                                                                zedeleyen, yanıltıcı, saldırgan, müstehcen, pornografik,
+                                                                kişilik haklarını zedeleyen, telif haklarına aykırı,
+                                                                yasa dışı faaliyetleri teşvik eden içerikler
+                                                                üretmeyeceğini, paylaşmayacağını kabul eder. Aksi halde
+                                                                oluşacak zarardan tamamen kendisi sorumludur ve bu
+                                                                durumda Site yetkilileri, bu tür hesapları askıya
+                                                                alabilir, sona erdirebilir, yasal süreç başlatma hakkını
+                                                                saklı tutar. Bu sebeple yargı mercilerinden etkinlik
+                                                                veya kullanıcı hesapları ile ilgili bilgi talepleri
+                                                                gelirse paylaşma hakkını saklı tutar.<br>
+                                                                1.5. Site’nin üyelerinin birbirleri veya üçüncü
+                                                                şahıslarla olan ilişkileri kendi sorumluluğundadır.</p>
+
+                                                            <h3>1.6 Kullanıcı reklam adı altında SMS bildirimlerini
+                                                                kabul eder. Tarafına sipariş onayı, sipariş iptali,
+                                                                sipariş tamamlanma ve ödeme hatırlatma bildirimleri
+                                                                gönderilecektir. Aynı zamanda indirim ve promosyon
+                                                                günlerinde kullanıcıya SMS gönderimi yapılacaktır.
+                                                                İzinli data filtresi uygulanmaktadır. Sipariş veren her
+                                                                kullanıcı bu maddeyi kesinlikle kabul etmiş
+                                                                sayılacaktır.</h3>
+                                                        </blockquote>
+
+                                                        <p>&nbsp;</p>
+
+                                                        <h3><strong>2. FİKRİ MÜLKİYET HAKLARI</strong></h3>
+
+                                                        <blockquote>
+                                                            <p>2.1. İşbu Site’de yer alan unvan, işletme adı, marka,
+                                                                patent, logo, tasarım, bilgi ve yöntem gibi tescilli
+                                                                veya tescilsiz tüm fikri mülkiyet hakları Site işleteni
+                                                                ve sahibi firmaya veya belirtilen ilgilisine ait olup,
+                                                                ulusal ve uluslararası hukukun koruması altındadır. İşbu
+                                                                Site’nin ziyaret edilmesi veya bu Site’deki hizmetlerden
+                                                                yararlanılması söz konusu fikri mülkiyet hakları
+                                                                konusunda hiçbir hak vermez.<br>
+                                                                2.2. Site’de yer alan bilgiler hiçbir şekilde
+                                                                çoğaltılamaz, yayınlanamaz, kopyalanamaz, sunulamaz
+                                                                ve/veya aktarılamaz. Site’nin bütünü veya bir kısmı
+                                                                diğer bir internet sitesinde izinsiz olarak
+                                                                kullanılamaz.</p>
+                                                        </blockquote>
+
+                                                        <h3><strong>3. GİZLİ BİLGİ</strong></h3>
+
+                                                        <blockquote>
+                                                            <p>3.1. Firma, Site üzerinden kullanıcıların ilettiği
+                                                                kişisel bilgileri 3. kişilere açıklamayacaktır. Bu
+                                                                kişisel bilgiler; kişi adı-soyadı, adresi, telefon
+                                                                numarası, cep telefonu, e-posta adresi gibi kullanıcıyı
+                                                                tanımlamaya yönelik her türlü diğer bilgiyi içermekte
+                                                                olup, kısaca gizli bilgiler olarak anılacaktır.</p>
+
+                                                            <p>3.2. Kullanıcı, sadece tanıtım, reklam, kampanya,
+                                                                promosyon, duyuru vb. pazarlama faaliyetleri kapsamında
+                                                                kullanılması ile sınırlı olmak üzere, sitenin sahibi
+                                                                olan firmanın kendisine ait iletişim, portföy durumu ve
+                                                                demografik bilgilerini iştirakleri ya da bağlı bulunduğu
+                                                                grup şirketleri ile paylaşmasına muvafakat ettiğini
+                                                                kabul ve beyan eder. Bu kişisel bilgiler firma
+                                                                bünyesinde müşteri profili belirlemek, müşteri profiline
+                                                                uygun promosyon ve kampanyalar sunmak ve istatistiksel
+                                                                çalışmalar yapmak amacıyla kullanılabilecektir.</p>
+
+                                                            <p>3.3. Gizli bilgiler, ancak resmi makamlarca usulü
+                                                                dairesinde bu bilgilerin talep edilmesi halinde ve
+                                                                yürürlükteki emredici mevzuat hükümleri gereğince resmi
+                                                                makamlara açıklama yapılmasının zorunlu olduğu
+                                                                durumlarda resmi makamlara açıklanabilecektir.</p>
+                                                        </blockquote>
+
+                                                        <h3><strong>4. GARANTİ</strong></h3>
+
+                                                        <p>İşbu sözleşme maddesi uygulanabilir kanunun izin verdiği
+                                                            azami ölçüde geçerli olacaktır. Firma tarafından sunulan
+                                                            hizmetler olduğu gibi ve mümkün olduğu temelde sunulmakta ve
+                                                            pazarlanabilirlik, belirli bir amaca uygunluk veya ihlal
+                                                            etmeme konusunda tüm zımni garantiler de dâhil olmak üzere
+                                                            hizmetler veya uygulama ile ilgili olarak (Bunlarda yer alan
+                                                            tüm bilgiler dâhil) sarih veya zımni, kanuni veya başka bir
+                                                            nitelikte hiçbir garantide bulunmamaktadır.</p>
+
+                                                        <p>Gönderilen hizmetin (Takipçi, beğeni, yorum vs.) sosyal ağ
+                                                            tarafından yapılan güncelleme ile düşme, silinme riskleri
+                                                            bulunmaktadır, firmamız (ysrmediaglobal.com) bu konuda sorumluluk
+                                                            almamaktadır. Satın alan kişiler bunu kabul etmiş
+                                                            sayılır.&nbsp;</p>
+
+                                                        <h3><strong>5. KAYIT VE GÜVENLİK</strong></h3>
+
+                                                        <p>Kullanıcı, doğru, eksiksiz ve güncel kayıt bilgilerini vermek
+                                                            zorundadır. Aksi halde bu Sözleşme ihlal edilmiş sayılacak
+                                                            ve Kullanıcı bilgilendirilmeksizin hesap
+                                                            kapatılabilecektir.<br>
+                                                            Kullanıcı, Site ve üçüncü taraf sitelerdeki şifre ve hesap
+                                                            güvenliğinden kendisi sorumludur. Aksi halde oluşacak veri
+                                                            kayıplarından ve güvenlik ihlallerinden veya donanım ve
+                                                            cihazların zarar görmesinden Firma sorumlu tutulamaz.</p>
+
+                                                        <h3><strong>6. MÜCBİR SEBEP</strong></h3>
+
+                                                        <p>Tarafların kontrolünde olmayan; tabii afetler, yangın,
+                                                            patlamalar, iç savaşlar, savaşlar, ayaklanmalar, halk
+                                                            hareketleri, seferberlik ilanı, grev, lokavt ve salgın
+                                                            hastalıklar, altyapı ve internet arızaları, elektrik
+                                                            kesintisi gibi sebeplerden (Mücbir sebep olarak anılacaktır)
+                                                            dolayı sözleşmeden doğan yükümlülükler taraflarca ifa
+                                                            edilemez hale gelirse, taraflar bundan sorumlu değildir. Bu
+                                                            sürede tarafların işbu sözleşmeden doğan hak ve
+                                                            yükümlülükleri askıya alınır.</p>
+
+                                                        <h3><strong>7. SÖZLEŞMENİN BÜTÜNLÜĞÜ VE
+                                                                UYGULANABİLİRLİK</strong></h3>
+
+                                                        <p>İşbu sözleşme şartlarından biri, kısmen veya tamamen geçersiz
+                                                            hale gelirse, sözleşmenin geri kalanı geçerliliğini korumaya
+                                                            devam eder.</p>
+
+                                                        <h3><strong>8. SÖZLEŞMEDE YAPILACAK DEĞİŞİKLİKLER</strong></h3>
+
+                                                        <p>Firma, dilediği zaman Site’de sunulan hizmetleri ve işbu
+                                                            sözleşme şartlarını kısmen veya tamamen değiştirebilir.
+                                                            Değişiklikler Site’de yayınlandığı tarihten itibaren geçerli
+                                                            olacaktır. Değişiklikleri takip etmek Kullanıcı’nın
+                                                            sorumluluğundadır. Kullanıcı, sunulan hizmetlerden
+                                                            yararlanmaya devam etmekle bu değişiklikleri de kabul etmiş
+                                                            sayılır.</p>
+
+                                                        <h3><strong>9. TEBLİGAT</strong></h3>
+
+                                                        <p>İşbu sözleşme ile ilgili taraflara gönderilecek olan tüm
+                                                            bildirimler, Firma’nın bilinen e-posta adresi ve
+                                                            Kullanıcı’nın üyelik formunda belirttiği e-posta adresi
+                                                            vasıtasıyla yapılacaktır. Kullanıcı, üye olurken belirttiği
+                                                            adresin geçerli tebligat adresi olduğunu, değişmesi
+                                                            durumunda 5 gün içinde yazılı olarak diğer tarafa
+                                                            bildireceğini, aksi halde bu adrese yapılacak tebligatların
+                                                            geçerli sayılacağını kabul eder.</p>
+
+                                                        <h3><strong>10. DELİL SÖZLEŞMESİ</strong></h3>
+
+                                                        <p>Taraflar arasında işbu sözleşme ile ilgili işlemler için
+                                                            çıkabilecek her türlü uyuşmazlıklarda tarafların defter,
+                                                            kayıt ve belgeleri ile ve bilgisayar kayıtları ve faks
+                                                            kayıtları 6100 sayılı Hukuk Muhakemeleri Kanunu uyarınca
+                                                            delil olarak kabul edilecek olup, Kullanıcı bu kayıtlara
+                                                            itiraz etmeyeceğini kabul eder.</p>
+
+                                                        <h3><strong>11. UYUŞMAZLIKLARIN ÇÖZÜMÜ</strong></h3>
+
+                                                        <p>İşbu sözleşmenin uygulanmasından veya yorumlanmasından
+                                                            doğacak her türlü uyuşmazlığın çözümünde KKTC Adliyesi
+                                                            Mahkemeleri ve İcra Daireleri yetkilidir</p>
+                                                        <p></p>
+                                                    </div>
+                                                </div>
+
+                                                <div class="kapabut" style="text-align: center;">
+                                                    <i class="fas fa-times-circle" data-dismiss="modal"
+                                                        style="border: none;cursor: pointer;font-size: 25px;"></i>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <label>
+                            <input type="checkbox" name="sozlesme" required="" value="kullanimsart"
+                                style="width: auto;margin-right: 5px;"><span data-toggle="modal"
+                                data-target="#kullanicisozlesmesi">Kullanım Şartlarını Okudum ve Kabul Ediyorum.</span>
+                        </label>
+                    </div>
+                    <input type="button" name="previous" class="previous action-button-previous keskin"
+                        value="Geri Git">
+                    <input type="hidden" name="paket_secimi" value="37">
+
+                    <button name="olay" value="siparis" class="btn btn-success action-button keskin">ÖDEMEYE
+                        GEÇ</button>
+                </fieldset>
+            </form>
+            <input type="hidden" id="bolum" value="islem-adresi">
+        </div>
+    </main>
+    {% include 'layouts/footer.html' %}

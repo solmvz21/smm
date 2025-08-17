@@ -1,0 +1,227 @@
+{% load static %}
+
+<footer id="footer" class="xrb des3">
+  <div class="oval-ust"></div>
+  <div class="footer-top">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-8 offset-md-2" style="text-align: center;">
+          <h3 style="font-weight: bold;margin-bottom: 15px;">Sosyal Medyada Yükselin</h3>
+          <p>Bizler yıllardır sosyal medyaya hakim olup sizleri daha iyi seviyelere taşıyabilmek için çalışmaktayız.
+            Yılların getirdiği tecrübe ile güvenli, hızlı ve kaliteli şekilde hizmet vermekteyiz.</p>
+          <a href="{% url 'iletisim' %}" class="btn footerilet xrc keskin"><i class="fas fa-envelope"></i> İletişime
+            Geç</a>
+        </div>
+
+
+      </div>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <div class="container">
+      <div class="col-md-12 row">
+        <div class="col-md-6 fsoya">
+          TakipixMedia | 2025 </div>
+
+
+        <div class="col-md-6 fsaya">
+          <a href="{% url 'iade' %}">İade Koşulları</a> • <a href="{% url 'hizmet' %}">Hizmet Şartları
+          </a>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="sorgu" style="background: rgba(0, 0, 0, 0.80);" tabindex="-1" role="dialog"
+    aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document" style="max-width: 100%">
+      <div class="container">
+        <div class="modal-content" id="sorgusonucla" style="background: none">
+
+          <div class="modal-body">
+            <div class="container">
+              <div class="sorgusss row">
+                <div class="col-md-8 offset-md-2" style="padding-right: 0; padding-left: 0;">
+                  <div class="kapabut" style="text-align: center;">
+                    <i class="fas fa-times-circle" data-dismiss="modal"
+                      style="border: none;cursor: pointer;font-size: 25px;"></i>
+                  </div>
+                  <div class="sorgualan" style="text-align: center;">
+                    <h2 style="font-weight: bold;">Sipariş Sorgulama</h2>
+                    <p>Siparişiniz hakkında bilgi edinmek için lütfen aşağıda bulunan alana sipariş numaranızı girin.
+                    </p>
+                    <input type="text" keyup="SiparisDurum()" class="keskin" id="sorgulamaitem"
+                      placeholder="Sipariş Numarası Giriniz"><button onclick="SiparisDurum()"
+                      class="btn sorgubut xrb keskin"><i class="fas fa-search"></i></button>
+                      <div id="siparis-sonuc" style="margin-top: 20px; color: white; text-align: center;"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  </div>
+  <div class="sorgu xrbs keskin"><a title="Sipariş Sorgula" class="sorbut" data-toggle="modal"
+      data-target="#sorgu">Sipariş Sorgula <i class="fas fa-search"></i></a></div>
+</footer>
+<script src="{% static '3.4.1/jquery.min.js' %}"></script>
+
+<script>
+  function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+      const cookies = document.cookie.split(';');
+      for (let i = 0; i < cookies.length; i++) {
+        const cookie = cookies[i].trim();
+        if (cookie.substring(0, name.length + 1) === (name + '=')) {
+          cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+          break;
+        }
+      }
+    }
+    return cookieValue;
+  }
+
+  const csrftoken = getCookie('csrftoken');
+
+  function HizliSatinAl(adim) {
+    if (adim === "platform") {
+      const platform_id = document.getElementById("platform").value;
+      fetch("/kategori_getir/", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+          "X-CSRFToken": csrftoken,
+        },
+        body: "platform_id=" + encodeURIComponent(platform_id),
+      })
+      .then(response => response.json())
+      .then(data => {
+        const kategoriSelect = document.getElementById("kategori");
+        kategoriSelect.innerHTML = '<option disabled selected>Kategori Seçin</option>';
+        data.kategoriler.forEach(kat => {
+          const option = document.createElement("option");
+          option.value = kat.id;
+          option.textContent = kat.ad;
+          kategoriSelect.appendChild(option);
+        });
+        document.getElementById("paket").innerHTML = '<option disabled selected>Paket Seçin</option>';
+        document.getElementById("satinAlBtn").innerText = 'SATIN AL';
+      });
+
+    } else if (adim === "kategori") {
+      const kategori_id = document.getElementById("kategori").value;
+      fetch("/paket_getir/", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+          "X-CSRFToken": csrftoken,
+        },
+        body: "kategori_id=" + encodeURIComponent(kategori_id),
+      })
+      .then(response => response.json())
+      .then(data => {
+        const paketSelect = document.getElementById("paket");
+        paketSelect.innerHTML = '<option disabled selected>Paket Seçin</option>';
+        data.paketler.forEach(pak => {
+          const option = document.createElement("option");
+          option.value = pak.id;
+          option.textContent = pak.ad;
+          option.setAttribute("data-fiyat", pak.fiyat); // fiyatı sakla
+          paketSelect.appendChild(option);
+        });
+        document.getElementById("satinAlBtn").innerText = 'SATIN AL';
+      });
+
+    } else if (adim === "paket") {
+      const paketSelect = document.getElementById("paket");
+      const selectedOption = paketSelect.options[paketSelect.selectedIndex];
+      const fiyat = selectedOption.getAttribute("data-fiyat");
+
+      const satinAlBtn = document.getElementById("satinAlBtn");
+      if (fiyat) {
+        satinAlBtn.innerText = `SATIN AL – ${fiyat} ₺`;
+      } else {
+        satinAlBtn.innerText = 'SATIN AL';
+      }
+    }
+  }
+</script>
+<script>
+document.getElementById('satinAlBtn').addEventListener('click', function() {
+    const paketId = document.getElementById("paket").value;
+
+    if (!paketId || paketId.startsWith("0")) {
+        alert("Lütfen bir paket seçin.");
+        return;
+    }
+
+    // Sipariş sayfasına yönlendir
+    window.location.href = `/siparis/${paketId}/`;
+});
+</script>
+
+<script>
+function SiparisDurum() {
+    const siparisNo = document.getElementById("sorgulamaitem").value.trim();
+    const sonucDiv = document.getElementById("siparis-sonuc");
+
+    if (!siparisNo) {
+        sonucDiv.innerHTML = "<div class='alert alert-danger'>Lütfen geçerli bir sipariş numarası girin.</div>";
+        return;
+    }
+
+    // AJAX istek
+    fetch(`siparis-sorgula/?siparis_no=${encodeURIComponent(siparisNo)}`)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error("Sunucu hatası");
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (data.status === "found") {
+                sonucDiv.innerHTML = `
+                    <div class="alert alert-success">
+                        <strong>Sipariş No:</strong> ${data.siparis_no}<br>
+                        <strong>Durum:</strong> ${data.durum}<br>
+                        <strong>Tarih:</strong> ${data.tarih}<br>
+                        <strong>Ürün:</strong> ${data.urun}
+                    </div>
+                `;
+            } else {
+                sonucDiv.innerHTML = `<div class="alert alert-warning">Sipariş bulunamadı.</div>`;
+            }
+        })
+        .catch(error => {
+            sonucDiv.innerHTML = `<div class="alert alert-danger">Hata: ${error.message}</div>`;
+        });
+}
+</script>
+
+
+
+
+<script src="{% static 'assets/jquery/jquery.min.js' %}"></script>
+<script src="{% static 'assets/jquery/jquery-migrate.min.js' %}"></script>
+<script src="{% static 'assets/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+<script src="{% static 'assets/easing/easing.min.js' %}"></script>
+<script src="{% static 'assets/mobile-nav/mobile-nav.js' %}"></script>
+<script src="{% static 'assets/wow/wow.min.js' %}"></script>
+<script src="{% static 'tassets/waypoints/waypoints.min.js' %}"></script>
+<script src="{% static 'assets/owlcarousel/owl.carousel.min.js' %}"></script>
+<script src="{% static 'assets/owlcarousel/kaydirmaca.js' %}"></script>
+<script src="{% static 'assets/lightbox/js/lightbox.min.js' %}"></script>
+<link rel="stylesheet" href="{% static 'v5.9.0/css/all.css' %}"
+  integrity="sha384-i1LQnF23gykqWXg6jxC2ZbCbUMxyw5gLZY6UiUS98LYV5unm8GWmfkIS6jqJfb4E" crossorigin="anonymous">
+<script src="{% static 'assets/main.js' %}"></script>
+<script src="{% static 'assets/siparis.js' %}"></script>
+
+</body>
+
+
+</html>
